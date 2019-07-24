@@ -1,15 +1,15 @@
 const request = require('request');
 const bash = require('./bash.js');
 const rp =require('request-promise');
+const string = require('./strings');
 
 let org = process.argv[2]; //following the pattern 'node index.js orgName" this will give us the organization from the terminal
-const authToken = "a8080c4987d13b1ee4db2f504c7e344226c7f9f0";
 const options = {
     url: 'https://api.github.com/orgs/' + org + '/repos',
     headers: {
         'User-Agent': 'ukefan42',
         json : true,
-        Authorization: "token " + authToken
+        Authorization: "token " + string.OAuthToken
     }
 };
 console.log("huh.");
@@ -27,6 +27,8 @@ rp(options)
     })
     .catch(function (err) {
         console.log("something bad happened in the root")
+        console.error(err.message);
+        console.error(err.stack)
     });
 
 async function forkRepo(info){
@@ -37,7 +39,7 @@ async function forkRepo(info){
         method : "POST",
         headers: {
             'User-Agent': 'ukefan42',
-            Authorization: "token " + authToken
+            Authorization: "token " + string.OAuthToken
         }
     };
     if(info.owner.type === "Organization"){

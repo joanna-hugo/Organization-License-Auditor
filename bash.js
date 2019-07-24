@@ -16,7 +16,11 @@ const branch = 'iss11';
 exports.setup = async function(cloneURL, name) {
     console.log("\t\tgoing to try and setup " + cloneURL)
     try {
-        await exec('git setup  ' + cloneURL).then(async function(stdout, stderr){
+        await exec('cd ..' ).then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout)
+            else console.log("moved up a level " + name)
+        });
+        await exec('git clone  ' + cloneURL).then(async function(stdout, stderr){
             console.log(stdout.stderr);
             // console.log(stderr);
         });
@@ -96,6 +100,11 @@ exports.cleanUp = async function(name) {
     try {
         const { stdout, stderr } = await exec('rm -r ' + name);
         console.log('deletinng ' + name + ' folder');
+        await exec('cd ..' + name).then(async function(){
+            await exec('rm -r' + name).then(function(stdout){
+                if(stdout.stdout)console.log(stdout.stdout)
+            });
+        });
     }catch (err){
         console.error(err);
     }
