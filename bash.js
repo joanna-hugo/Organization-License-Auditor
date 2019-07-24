@@ -4,7 +4,7 @@ const exec = util.promisify(require('child_process').exec);
 /*
 * I need to write a bash script that
 * clones the repo (where)
-*   git clone ""
+*   git setup ""
 * move into the repo
 *   cd ""
 * create a file for the license
@@ -13,16 +13,23 @@ const exec = util.promisify(require('child_process').exec);
 * what do I do from here with the commit/fork?
 */
 const branch = 'iss11';
-exports.clone = async function(cloneURL) {
-    console.log("\t\tgoing to try and clone " + cloneURL)
+exports.setup = async function(cloneURL, name) {
+    console.log("\t\tgoing to try and setup " + cloneURL)
     try {
-        await exec('git clone  ' + cloneURL).then(async function(stdout, stderr){
+        await exec('git setup  ' + cloneURL).then(async function(stdout, stderr){
             console.log(stdout.stderr);
             // console.log(stderr);
-            await exec('git checkout ' + branch).then(function(stdout){ //TODO add the -b back to CREATE a new branch
-                console.log(stdout.stderr)
-            })
         });
+        await exec('cd ' + name).then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout)
+            else console.log("moved into " + name)
+        });
+        await exec('git checkout master').then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout)
+        });
+        await exec('git checkout ' + branch).then(function(stdout){ //TODO add the -b back to CREATE a new branch
+            console.log(stdout.stderr)
+        })
     }catch (err){
         console.error(err);
     }
@@ -37,7 +44,7 @@ cd = async function(name) {
     }
 };
 
-exports.cp = async function(name){
+exports.addLicense = async function(name, url){
     try {
         await exec('cp  exampleLicense LICENSE.txt ').then(async function(stdout, stderr){
             // console.log('copying license into ' + name + ' folder');
@@ -48,17 +55,37 @@ exports.cp = async function(name){
             else{
                 console.log("created license for " + name);
             }
-            await exec("git commit -a -m \"added license\"");
-            await exec('mv LICENSE.txt ' + name).then(async function(stdout){
-                if(stdout.stdout) console.log(stdout.stdout);
-                if(stdout.stderr) console.log(stdout.stderr);
-                await cd(name);
-                await exec('git push -u origin ' + branch).then(async function(stdout) {
-                    if (stdout.stdout) console.log(stdout.stdout)
-                    if (stdout.stderr) console.log(stdout.stderr)
-                })
-            })
         });
+        await exec('mv LICENSE.txt ' + name).then(async function(stdout){
+            if(stdout.stdout) console.log(stdout.stdout);
+            if(stdout.stderr) console.log(stdout.stderr);
+            await cd(name);
+            console.log("moved into sub-repo");
+        });
+        await exec('cd ' + name).then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout)
+            else console.log("moved into " + name)
+        });
+        // await exec('git push -u origin ' + branch).then(async function(stdout) {
+        //     if (stdout.stdout) console.log(stdout.stdout);
+        //     if (stdout.stderr) console.log(stdout.stderr)
+        // });
+        // await exec('git request-pull -p ' + branch + ' ' + url +' master').then(async function(stdout) {
+        //     if (stdout.stdout) console.log(stdout.stdout);
+        //     if (stdout.stderr) console.log(stdout.stderr)
+        // });
+        await exec('git add *').then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout);
+            else console.log("moved into " + name)
+        });
+        await exec('git commit -a -m "added license file"').then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout);
+            else console.log("moved into " + name)
+        });
+        await exec('git push --set-upstream origin ' + branch).then(function(stdout){
+            if(stdout.stdout)console.log(stdout.stdout);
+            else console.log("moved into " + name)
+        })
 
     }catch (err){
         console.error(err);

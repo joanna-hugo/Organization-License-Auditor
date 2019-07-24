@@ -3,7 +3,7 @@ const bash = require('./bash.js');
 const rp =require('request-promise');
 
 let org = process.argv[2]; //following the pattern 'node index.js orgName" this will give us the organization from the terminal
-const authToken = "605f6d3dc4e0bf016d029361387af6fdafb0c989";
+const authToken = "a8080c4987d13b1ee4db2f504c7e344226c7f9f0";
 const options = {
     url: 'https://api.github.com/orgs/' + org + '/repos',
     headers: {
@@ -12,7 +12,7 @@ const options = {
         Authorization: "token " + authToken
     }
 };
-
+console.log("huh.");
 rp(options)
     .then(async function (info) {
         info = JSON.parse(info);
@@ -26,7 +26,7 @@ rp(options)
         }
     })
     .catch(function (err) {
-
+        console.log("something bad happened in the root")
     });
 
 async function forkRepo(info){
@@ -58,9 +58,9 @@ async function forkRepo(info){
 
 
 async function terminal(info){
-    console.log("attempting to clone and create license for " + info.name );
-    await bash.clone(info.clone_url);
-    await bash.cp(info.name);
+    console.log("attempting to setup and create license for " + info.name );
+    await bash.setup(info.clone_url, info.name);
+    await bash.addLicense(info.name, info.url);
     await pullReqst(info)
     await bash.cleanUp(info.name);
     console.log("done working with " + info.name + "\n\n\n")
@@ -78,7 +78,7 @@ async function pullReqst(info){
         body : {
             title: "Added License",
             body: "I have added a license. Near the body of the document, replace [yyyy] [name] with the appropriate name and date",
-            head: "ukefan42:iss11",
+            head: "iss11",
             base: "master",
             maintainer_can_modify : true
         },
@@ -95,57 +95,3 @@ async function pullReqst(info){
             console.error(JSON.stringify(error.error.errors[0]));
         })
 }
-
-// async function clone(info){
-//     if(info.message === "The repository exists, but it contains no Git content. Empty repositories cannot be forked."){
-//         let path = response.req.path; //  /repos/ukulele-fan-club/ConcertsAPI/forks
-//         let repo = path.split("/")[3];
-//         console.log("Unable to fork " + repo + " because it is empty")
-//         return
-//     }
-//     let cloneOptions = {
-//         url: info.clone_url,
-//         method : "POST",
-//         headers: {
-//             'User-Agent': 'ukefan42',
-//             Authorization: "token " + authToken
-//         }
-//     };
-//     await rp(cloneOptions)
-//         .then(function(info){
-//         info = JSON.parse(info);
-//         console.log(info);
-//     })
-//     .catch(function(error){
-//         // currently getting a 301, MOVED PERMANENTLY when calling info.clone_url
-//             console.log(error.statusCode)
-//     })
-// }
-// iterate
-// fork the repo
-// make changes
-// pull request
-// request(options, iterate);
-// async function iterate(error, response, body) {
-//     if (!error && response.statusCode === 200) {
-//         const info = JSON.parse(body);
-//         for (let i = 0 ; i < info.length; i++){
-//             if(!info[i].license ){
-//                 console.log(info[i].name + " needs a license!");
-//                 await forkRepo(info[i])
-//             }else{
-//                 console.log(info[i].name + " already has a " + info[i].license.name)
-//             }
-//         }
-//     }else{
-//         if(response.statusCode === 401){
-//             console.log("Unauthorized")
-//         }
-//         console.log(body)
-//     }
-// }
-
-function nextStep(error, response, body){
-    console.log("\t\twe'll see")
-}
-// request(options, iterate);
