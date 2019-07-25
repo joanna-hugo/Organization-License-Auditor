@@ -4,7 +4,10 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# For Project
 strings.js
+temp/
 
 # Runtime data
 pids

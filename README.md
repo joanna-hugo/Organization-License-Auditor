@@ -34,6 +34,7 @@
 * Request Library - https://github.com/request/request
 * How to run a bash script from nodeJS - https://medium.com/stackfame/how-to-run-shell-script-file-or-command-using-nodejs-b9f2455cb6b7
 * Overall flow - https://gist.github.com/Chaser324/ce0505fbed06b947d962
+* Git Login terminal - https://stackoverflow.com/questions/34731832/login-to-github-from-command-line-with-multiple-accounts
 
 #Questions
 * Edge cases

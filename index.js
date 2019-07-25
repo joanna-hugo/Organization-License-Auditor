@@ -13,10 +13,11 @@ const options = {
     }
 };
 console.log("huh.");
+//TODO make instructions to make and delete temp folder
 rp(options)
     .then(async function (info) {
         info = JSON.parse(info);
-        for (let i = 0 ; i < info.length; i++){
+        for (let i = 0 ; i < 1; i++){ //TODO just 1 for testing, looping unnecessary for testing
             if(!info[i].license ){
                 console.log(info[i].name + " needs a license!");
                 await forkRepo(info[i])
@@ -75,7 +76,7 @@ async function pullReqst(info){
         headers: {
             'User-Agent': 'ukefan42',
             json : true,
-            Authorization: "token " + authToken
+            Authorization: "token " + string.OAuthToken
         },
         body : {
             title: "Added License",
