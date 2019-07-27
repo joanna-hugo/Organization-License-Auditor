@@ -12,6 +12,9 @@ For security reasons, I have not included my `secure.js` file in this public rep
 I have included my `secure.js` file holding credentials to a dummy-account (ukefan42) in my email to you, although I will also include a form at the bottom 
 of this document that you could easily use to create your own original `secure.js` file. 
 
+My code is able to identify repositories inside an organization that are lacking a license, fork those repositories, add a license, and commit and push those changes to a branch. 
+However, this code is currently unable to successfully complete a pull-request, although I have included my attempt. 
+
 #Assumptions
 * User has created a local secure.js file in the root of this repository to safely store their valid OAuth token and username
 * User does NOT have 2 factor authentication
