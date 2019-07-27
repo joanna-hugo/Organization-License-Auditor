@@ -5,6 +5,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# For Project
+secure.js
+temp/
+
 # Runtime data
 pids
 *.pid
