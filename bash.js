@@ -2,123 +2,58 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 var process = require('process');
 
-
-/*
-* I need to write a bash script that
-* clones the repo (where)
-*   git setup ""
-* move into the repo
-*   cd ""
-* create a file for the license
-*
-* make the license
-* what do I do from here with the commit/fork?
-*/
-const branch = 'iss20';
-exports.setup = async function(cloneURL, name) {
-    console.log("\t\tsetup func " + cloneURL)
+const branch = 'iss47';
+exports.branch = branch;
+exports.setup = async function (cloneURL, name, default_branch, origURL) {
     try {
-        // await exec('cd temp' ).then(async function(stdout){
-        //     if(stdout.stdout)console.log(stdout.stdout);
-        //     else console.log("moved into temp directory, will pwd");
-        //     await exec('pwd').then(function(stdout){
-        //         console.log(stdout.stdout);
-        //     })
-        // });
         await exec("mkdir temp");
-        process.chdir('./temp')//When the Node process exists, you will find yourself back in the CWD you started the process in.
-        await exec('git clone  ' + cloneURL).then(async function(stdout, stderr){
-            console.log(stdout.stderr);
-            // console.log(stderr);
+        process.chdir('./temp'); //When the Node process exists, you will find yourself back in the CWD you started the process in.
+        await exec('git clone  ' + cloneURL).then(function (stdout) {
+            if (stdout) console.log("cloned api");
         });
-        process.chdir('./'+name);
-        console.log("hopefully moved into " + name);
-        await exec('git checkout master').then(function(stdout){
-            if(stdout.stdout)console.log(stdout.stdout)
+        process.chdir('./' + name);
+        await exec('git remote add upstream ' + origURL).then(function (stdout) {
+            if (stdout.stdout) console.log("added remote upstream")
         });
-        await exec('git checkout -b ' + branch).then(function(stdout){ //TODO add the -b back to CREATE a new branch
-            console.log(stdout.stderr)
+        await exec('git checkout -b ' + branch + " " + default_branch).then(function (stdout) { //TODO add the -b back to CREATE a new branch
+            if (stdout) console.log("on new branch " + branch)
         })
-    }catch (err){
+    } catch (err) {
         console.error(err);
     }
 };
 
-
-
-exports.addLicense = async function(name, url){
+exports.addLicense = async function (name) {
     try {
-        await exec('pwd').then(function(info){
-            console.log(info.stdout)
-        });
         process.chdir('../');
         process.chdir('../');
-        await exec('pwd').then(function(info){
-            console.log(info.stdout)
-        });
-        // await exec('cp  exampleLicense LICENSE.txt ').then(async function(stdout, stderr){
-        //     // console.log('copying license into ' + name + ' folder');
-        //     // console.log('stderr:', stderr);
-        //     if(stderr){
-        //         console.log(stderr)
-        //     }
-        //     else{
-        //         console.log("created license for " + name);
-        //     }
-        // });
-        await exec('cp LICENSE.txt ' + " ./temp").then(async function(stdout){
-            if(stdout.stdout) console.log(stdout.stdout);
-            if(stdout.stderr) console.log(stdout.stderr);
+        await exec('cp LICENSE.txt ' + " ./temp").then(async function (stdout) {
+            if (stdout) console.log("creating new license for repo")
         });
         process.chdir('./temp');
-
-        await exec('mv LICENSE.txt ' + " ./" + name).then(async function(stdout){
-            if(stdout.stdout) console.log(stdout.stdout);
-            if(stdout.stderr) console.log(stdout.stderr);
-        });
+        await exec('mv LICENSE.txt ' + " ./" + name);
         process.chdir('./' + name);
-        console.log("hopefully moved into " + name);
 
-        // await exec('cd ' + name).then(function(stdout){
-        //     if(stdout.stdout)console.log(stdout.stdout)
-        //     else console.log("moved into " + name)
-        // });
-        // await exec('git push -u origin ' + branch).then(async function(stdout) {
-        //     if (stdout.stdout) console.log(stdout.stdout);
-        //     if (stdout.stderr) console.log(stdout.stderr)
-        // });
-        // await exec('git request-pull -p ' + branch + ' ' + url +' master').then(async function(stdout) {
-        //     if (stdout.stdout) console.log(stdout.stdout);
-        //     if (stdout.stderr) console.log(stdout.stderr)
-        // });
-        await exec('git add *').then(function(stdout){
-            if(stdout.stdout)console.log(stdout.stdout);
+        await exec('git add *');
+        await exec('git commit -a -m "added license file"').then(function (stdout) {
+            if (stdout.stdout) console.log("committed new license to repo");
         });
-        await exec('git commit -a -m "added license file"').then(function(stdout){
-            if(stdout.stdout)console.log(stdout.stdout);
+        await exec('git push  upstream ' + branch).then(function (stdout) { //TODO this is where my errors are coming from currently, try to set upstream EARLIER
+            if (stdout.stdout) console.log("pushed changes to repo");
         });
-        await exec('git push --set-upstream origin ' + branch + ' -f').then(function(stdout){
-            if(stdout.stdout)console.log(stdout.stdout);
-        })
-
-    }catch (err){
+    } catch (err) {
         console.error(err.stack);
-        await exec('pwd').then(function(info){
-            console.log(info.stdout)
-        });
+        console.log("Believe in Christ")
     }
 };
 
-exports.cleanUp = async function(name) {
+exports.cleanUp = async function (name) {
     try {
-        const { stdout, stderr } = await exec('rm -r ' + name);
-        console.log('deletinng ' + name + ' folder');
-        // await exec('cd ..' + name).then(async function(){
-        //     await exec('rm -r' + name).then(function(stdout){
-        //         if(stdout.stdout)console.log(stdout.stdout)
-        //     });
-        // });
-    }catch (err){
+        process.chdir('../');
+        process.chdir('../');
+        await exec('rm -r temp');
+        console.log('deleting temp folder and ' + name + ' repo');
+    } catch (err) {
         console.error(err);
     }
 };

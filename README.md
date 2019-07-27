@@ -1,30 +1,27 @@
 # Organization-License-Auditor
 
+#Prompt
 * Write code, in the language of your choice, that using the github API, goes through all the public and private github repos in a github organization and checks if they have a license.  
 * Write code that if the license is missing, opens a pull request which adds a license. 
 
+#Instructions
+From the command line, inside the root of the directory tree,  enter `node index [org-name]` replacing `[org-name]` for the appropriate organization.
+For example `node index ukulele-fan-club`
+
 #Assumptions
+* User has created a local secure.js file in the root of this repository to safely store their valid OAuth token and username
 * User does NOT have 2 factor authentication
-* User has rights to see organization
-    * user rights are not given to application, we will have to create a "dumb account" to give it access
-        * also, I don't want to hard code my username/password etc.
+* Given OAuth token has repo rights 
+* User is a member of the organization, the organization exists
+* Hardcoded branch name is not currently in use 
 
-# Break Down 
-* I need to write a bash script that
-    * clones the repo (where)
-    * move into the repo
-    * create a file for the license
-    * make the license
-    * what do I do from here with the commit/fork?
-    * What do I do about different operating systems??
-* Write a pull request that adds a license
-    * How do I issue an automated pull request? 
-        * https://developer.github.com/v3/pulls/
-        https://developer.github.com/v3/pulls/#create-a-pull-request
-        * https://www.npmjs.com/package/shelljs
-    * How do I add a license? 
-    * What license should I add?
-
+#Possible Improvements
+* Utilizing AWS lambdas 
+* Checking to make sure branch name not already in use
+* More and more robust error messages
+* Automatic authorization checking
+* Suggesting most appropriate license
+* Using information in the repo, to suggest a name and date for the license (eg. 2019 Joanna Hugo)
 
 # References
 * GitHub API - https://developer.github.com/v3/
@@ -34,14 +31,6 @@
 * Request Library - https://github.com/request/request
 * How to run a bash script from nodeJS - https://medium.com/stackfame/how-to-run-shell-script-file-or-command-using-nodejs-b9f2455cb6b7
 * Overall flow - https://gist.github.com/Chaser324/ce0505fbed06b947d962
+* Ovarall flow 2.0 - https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/
 * Git Login terminal - https://stackoverflow.com/questions/34731832/login-to-github-from-command-line-with-multiple-accounts
-
-#Questions
-* Edge cases
-    * Authorization
-    * different branches
-* What is the most secure way to do authorization?
-    * https://github.blog/2013-05-16-personal-api-tokens/
-    *  make use of the authorizations endpoint to generate tokens instead of storing your password.
-* Misc. Auth Questions
-    * "For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request."
+* Add SSH leys - https://gist.github.com/adamjohnson/5682757
