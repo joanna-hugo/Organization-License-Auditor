@@ -7,10 +7,9 @@
 # Instructions
 From the command line, inside the root of the directory tree,  enter `node index [org-name]` replacing `[org-name]` for the appropriate organization.
 For example `node index ukulele-fan-club`
-Create a `secure.js` file in the root directory to safely store a username and password. 
-For security reasons, I have not included my `secure.js` file in this public repository (also, storing an OAuth key in such a public place would invalidate it).
-I have included my `secure.js` file holding credentials to a dummy-account (ukefan42) in my email to you, although I will also include a form at the bottom 
-of this document that you could easily use to create your own original `secure.js` file. 
+
+You will need to enter a valid username and corresponding OAuth token (with repo rights) into the provided `secure.js` file. 
+I am unable to provide the credentials for my dummy-account I used during testing as that would invalidate my token. 
 
 My code is able to identify repositories inside an organization that are lacking a license, fork those repositories, add a license, and commit and push those changes to a branch. 
 However, this code is currently unable to successfully complete a pull-request, although I have included my attempt. 
@@ -36,14 +35,7 @@ This week has been filled with several unwelcome surprises, including a dead ani
 that required a lot of my attention as the Young Women's President in my ward. 
 These emergencies have necessitated hours of cleaning, repairs, meetings, and phone calls that I had not planned on. 
 I do not say this in any way to excuse myself, I simply wish to explain my situation.
+
 While my code may not be up to my highest standard, I hope that my actions of ministering exemplify BYU’s mission to “Go Forth and Serve”. 
 Thank you for your consideration, I look forward to meeting with you. 
 
-# secure.js template
-const OAuthToken = "YOUR OAUTH TOKEN HERE";
-const username = "YOUR USERNAME HERE";
-
-module.exports = {
-    OAuthToken: OAuthToken,
-    username: username
-};
