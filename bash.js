@@ -2,7 +2,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 var process = require('process');
 
-const branch = 'iss47';
+const branch = 'addLicense';
 exports.branch = branch;
 exports.setup = async function (cloneURL, name, default_branch, origURL) {
     try {
