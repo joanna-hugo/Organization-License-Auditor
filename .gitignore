@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # For Project
-strings.js
+secure.js
 temp/
 
 # Runtime data
